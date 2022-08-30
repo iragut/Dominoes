@@ -7,6 +7,8 @@ while True:
     computer_pieces = domino_set[7:14]
     stock_pieces = domino_set[14:]
     domino_snake = []
+    index = 0
+    number = 1
 
     doubles = [piece for piece in player_pieces + computer_pieces if piece[0] == piece[1]]
     if len(doubles) == 0:
@@ -19,10 +21,23 @@ while True:
     else:
         domino_snake.append(computer_pieces.pop(computer_pieces.index(highest_piece)))
         status = 'player'
-     
-    print(f'Stock pieces: {stock_pieces}')
-    print(f'Computer pieces: {computer_pieces}')
-    print(f'Player pieces: {player_pieces}')
-    print(f'Domino snake: {domino_snake}')
-    print(f'Status: {status}')
+
+    print("=" * 70)
+    print(f'Stock size: {len(stock_pieces)}')
+    print(f'Computer pieces: {len(computer_pieces)}')
+    print(f'''
+{highest_piece}
+''')
+
+    while index < len(player_pieces):
+        print(f"{number}:{player_pieces[index]}")
+        index += 1
+        number += 1
+
+    print("")
+
+    if status == "computer":
+        print("Status: Computer is about to make a move. Press Enter to continue...")
+    else:
+        print("Status: It's your turn to make a move. Enter your command.")
     break
