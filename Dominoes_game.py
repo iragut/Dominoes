@@ -56,6 +56,10 @@ while True:             # interface
     number = 1
 
     print("Your pieces:")
+    while index < len(player_pieces):     # show player pieces
+        print(f"{number}:{player_pieces[index]}")
+        index += 1
+        number += 1
 
     if len(player_pieces) == 0:           # win condition
         print("Status: The game is over. You won!")
@@ -63,47 +67,95 @@ while True:             # interface
     elif len(computer_pieces) == 0:
         print("Status: The game is over. The computer won!")
         break
-
-    while index < len(player_pieces):     # show player pieces
-        print(f"{number}:{player_pieces[index]}")
-        index += 1
-        number += 1
-
+    elif len(stock_pieces) == 0:
+        print("Status: The game is over. It's a draw!")
+        break
     print("")
 
-    if status == "computer":                 # computer player
+    if status == "computer":                   # computer player
+        counter = False
         answer = input("Status: Computer is about to make a move. Press Enter to continue...\n")
-        choice = random.randint(0, len(computer_pieces))
+        for size in range(len(computer_pieces)):
+            counter = False
+            piece = computer_pieces[size]
+            if piece[0] == the_game[-1][1]:      # check if computer has a valid move
+                the_game.append(piece)
+                computer_pieces.remove(piece)
+                status = "player"
+                break
 
-        if choice == 0:
+            elif piece[1] == the_game[-1][1]:
+                piece = [piece[1], piece[0]]
+                the_game.append(piece)
+                piece = computer_pieces[size]
+                computer_pieces.remove(piece)
+                status = "player"
+                break
+
+            elif piece[1] == the_game[0][0]:
+                the_game.insert(0, piece)
+                computer_pieces.remove(piece)
+                status = "player"
+                break
+
+            elif piece[1] == the_game[0][0]:
+                piece = [piece[1], piece[0]]
+                the_game.insert(0, piece)
+                piece = computer_pieces[size]
+                computer_pieces.remove(piece)
+                status = "player"
+                break
+            else:
+                counter = True
+        if counter:
             piece = random.choice(stock_pieces)
             computer_pieces.append(piece)
             stock_pieces.remove(piece)
             status = "player"
 
-        else:
-            piece = random.choice(computer_pieces)
-            the_game.insert(-1, piece)
-            computer_pieces.remove(piece)
-            status = "player"
-
-    else:                       # player
+    else:                                 # player
         answer = input("Status: It's your turn to make a move. Enter your command.\n")
         while True:
             if isint(answer) and -len(player_pieces) <= int(answer) <= len(player_pieces):
                 if int(answer) > 0:
-                    piece = player_pieces[int(answer) - 1]
-                    the_game.append(piece)
-                    player_pieces.remove(piece)
-                    status = "computer"
-                    break
+                    piece = player_pieces[int(answer) - 1]    # check if is a valid move(right side)
+
+                    if piece[0] == the_game[-1][1]:
+                        the_game.append(piece)
+                        player_pieces.remove(piece)
+                        status = "computer"
+                        break
+
+                    elif piece[1] == the_game[-1][1]:
+                        piece = [piece[1], piece[0]]
+                        the_game.append(piece)
+                        piece = player_pieces[int(answer) - 1]
+                        player_pieces.remove(piece)
+                        status = "computer"
+                        break
+
+                    else:
+                        answer = input("Illegal move. Please try again.\n")
 
                 elif int(answer) < 0:
-                    piece = player_pieces[abs(int(answer)) - 1]
-                    the_game.insert(0, piece)
-                    player_pieces.remove(piece)
-                    status = "computer"
-                    break
+                    piece = player_pieces[abs(int(answer)) - 1]      # check if is a valid move(left side)
+
+                    if piece[1] == the_game[0][0]:
+                        the_game.insert(0, piece)
+                        player_pieces.remove(piece)
+                        status = "computer"
+                        break
+
+                    elif piece[0] == the_game[0][0]:
+                        piece = [piece[1], piece[0]]
+                        the_game.insert(0, piece)
+                        piece = player_pieces[abs(int(answer)) - 1]
+                        player_pieces.remove(piece)
+                        status = "computer"
+                        break
+
+                    else:
+                        answer = input("Illegal move. Please try again.\n")
 
                 else:
                     piece = random.choice(stock_pieces)
@@ -113,4 +165,3 @@ while True:             # interface
                     break
             else:
                 answer = input("Invalid input. Please try again.\n")
-
